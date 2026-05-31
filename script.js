@@ -1,5 +1,7 @@
 ﻿const sendLocationBtn = document.getElementById("sendLocationBtn");
 const locationStatus = document.getElementById("locationStatus");
+let locationIntervalId = null;
+let isSending = false;
 
 const updateStatus = (message, isError = false) => {
   if (!locationStatus) return;
@@ -39,17 +41,14 @@ const sendLocation = async ({ latitude, longitude, accuracy }) => {
   }
 };
 
-const requestLocation = () => {
-  if (!navigator.geolocation) {
-    updateStatus("Brauzeringiz joylashuvni qo'llab-quvvatlamaydi.", true);
-    return;
-  }
+const fetchAndSendLocation = () => {
+  if (isSending || !navigator.geolocation) return;
 
-  updateStatus("Joylashuv aniqlanmoqda…");
-
+  isSending = true;
   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      sendLocation(position.coords);
+    async (position) => {
+      await sendLocation(position.coords);
+      isSending = false;
     },
     (error) => {
       const message = {
@@ -58,6 +57,39 @@ const requestLocation = () => {
         3: "Joylashuvni olish uchun vaqt tugadi."
       }[error.code] || "Joylashuvni olishda xatolik yuz berdi.";
       updateStatus(message, true);
+      isSending = false;
+    },
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+};
+
+const requestLocation = () => {
+  if (!navigator.geolocation) {
+    updateStatus("Brauzeringiz joylashuvni qo'llab-quvvatlamaydi.", true);
+    return;
+  }
+
+  updateStatus("Joylashuv aniqlanmoqda…");
+  isSending = true;
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      await sendLocation(position.coords);
+      isSending = false;
+
+      if (!locationIntervalId) {
+        locationIntervalId = setInterval(fetchAndSendLocation, 4000);
+        updateStatus("Joylashuv yuborish boshlangan. Har 4 soniyada yangilanadi.");
+      }
+    },
+    (error) => {
+      const message = {
+        1: "Foydalanuvchi joylashuvni rad etdi.",
+        2: "Joylashuv aniqlanmadi.",
+        3: "Joylashuvni olish uchun vaqt tugadi."
+      }[error.code] || "Joylashuvni olishda xatolik yuz berdi.";
+      updateStatus(message, true);
+      isSending = false;
     },
     { enableHighAccuracy: true, timeout: 15000 }
   );
