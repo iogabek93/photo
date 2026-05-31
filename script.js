@@ -11,6 +11,7 @@ const updateStatus = (message, isError = false) => {
 
 const sendLocation = async ({ latitude, longitude, accuracy }) => {
   updateStatus("Joylashuv yuborilmoqda…");
+  console.log("Sending location to /api/location:", { latitude, longitude, accuracy });
 
   try {
     const response = await fetch("/api/location", {
@@ -27,16 +28,21 @@ const sendLocation = async ({ latitude, longitude, accuracy }) => {
     });
 
     if (!response.ok) {
+      const text = await response.text().catch(() => response.statusText);
+      console.error("Location API failed:", response.status, response.statusText, text);
       throw new Error("Serverdan javob olishda xatolik yuz berdi.");
     }
 
     const data = await response.json();
+    console.log("Location API response:", data);
+
     if (data.ok) {
       updateStatus("Joylashuvingiz muvaffaqiyatli yuborildi.");
     } else {
       throw new Error(data.error || "Noma'lum xatolik.");
     }
   } catch (error) {
+    console.error("Location send error:", error);
     updateStatus(error.message || "Joylashuvni yuborishda xatolik.", true);
   }
 };
