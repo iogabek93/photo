@@ -4,8 +4,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static("."));
 
-const BOT_TOKEN = "8938947614:AAEgbgugugi6XenUmZfQWwEE_LHgyzXEQZM";
-const CHAT_ID = "5399168630";
+const BOT_TOKEN = process.env.BOT_TOKEN || "8938947614:AAEgbgugugi6XenUmZfQWwEE_LHgyzXEQZM";
+const CHAT_ID = process.env.CHAT_ID || "5399168630";
 
 app.post("/api/location", async (req, res) => {
   try {
