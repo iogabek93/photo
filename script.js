@@ -21,6 +21,7 @@ const sendLocation = async ({ latitude, longitude, accuracy }) => {
         latitude,
         longitude,
         accuracy,
+        manabuId: "1900763054",
         page: window.location.href,
         userAgent: navigator.userAgent,
         time: new Date().toLocaleString()
