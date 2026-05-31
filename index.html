@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yo‘qolgan shaxs bo‘yicha e’lon</title>
+  <meta name="description" content="Yo‘qolgan shaxs bo‘yicha rasmiy e’lon. Ma’lumotga ega fuqarolardan telefon orqali xabar berish so‘raladi." />
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --primary: #0f172a;
+      --danger: #b91c1c;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --bg: #f8fafc;
+      --white: #ffffff;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--primary);
+    }
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 24px;
+    }
+    .header-inner {
+      max-width: 1120px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .seal {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+    .status {
+      background: #fee2e2;
+      color: var(--danger);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .main {
+      max-width: 1120px;
+      margin: 34px auto;
+      padding: 0 20px;
+    }
+    .hero {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, .08);
+    }
+    .notice-bar {
+      background: var(--danger);
+      color: white;
+      text-align: center;
+      padding: 16px;
+      font-size: clamp(20px, 3.5vw, 34px);
+      font-weight: 900;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+    .content {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 36px;
+      padding: 36px;
+    }
+    .photo-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      background: #f1f5f9;
+    }
+    .photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      background: #e2e8f0;
+    }
+    .photo-caption {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .label {
+      display: inline-block;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 9px 13px;
+      border-radius: 999px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(30px, 4.8vw, 54px);
+      line-height: 1.05;
+      color: var(--primary);
+    }
+    .lead {
+      font-size: clamp(18px, 2.2vw, 23px);
+      line-height: 1.58;
+      color: #334155;
+      margin: 0 0 18px;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .info {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 15px;
+      background: #fafafa;
+    }
+    .info small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+    .info b { font-size: 18px; }
+    .alert {
+      border-left: 5px solid var(--danger);
+      background: #fff7ed;
+      padding: 18px;
+      border-radius: 14px;
+      font-size: 18px;
+      line-height: 1.55;
+      color: #292524;
+      font-weight: 700;
+    }
+    .contact {
+      margin-top: 24px;
+      background: var(--primary);
+      color: white;
+      border-radius: 20px;
+      padding: 24px;
+    }
+    .contact-title {
+      color: #cbd5e1;
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .phone {
+      display: block;
+      color: white;
+      text-decoration: none;
+      font-size: clamp(30px, 5vw, 48px);
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .btn {
+      text-align: center;
+      text-decoration: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 16px;
+    }
+    .call { background: #16a34a; color: white; }
+    .share { background: #2563eb; color: white; }
+    .footer {
+      max-width: 1120px;
+      margin: 18px auto 32px;
+      padding: 0 20px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .location-consent {
+      margin-top: 18px;
+      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+      border-radius: 18px;
+      padding: 18px;
+      color: #14532d;
+    }
+    .location-consent h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+    .location-consent p {
+      margin: 0 0 14px;
+      line-height: 1.5;
+      color: #166534;
+      font-size: 16px;
+    }
+    .location-btn {
+      border: 0;
+      width: 100%;
+      background: #16a34a;
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .location-status {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #166534;
+    }
+    @media (max-width: 850px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .content { grid-template-columns: 1fr; padding: 24px; }
+      .photo-card { max-width: 340px; margin: auto; }
+      .info-grid, .actions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="seal">!</div>
+        <div>Yo‘qolgan shaxs bo‘yicha rasmiy e’lon</div>
+      </div>
+      <div class="status">QIDIRILMOQDA</div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="hero">
+      <div class="notice-bar">Diqqat! Yo‘qolgan shaxs qidirilmoqda</div>
+      <div class="content">
+        <aside class="photo-card">
+          <img class="photo" src="./image.png" alt="Yo‘qolgan shaxs rasmi" />
+          <div class="photo-caption">Shaxsni taniganlar yoki ko‘rganlar xabar berishi so‘raladi</div>
+        </aside>
+
+        <section>
+          <span class="label">E’lon sanasi: 28-may holati bo‘yicha</span>
+          <h1>Ko‘rganlar zudlik bilan xabar bering</h1>
+          <p class="lead">Ushbu suratdagi yigit 28-may kuni uyidan chiqib ketgan va noma’lum tomonga ketib, shu kungacha uyiga qaytib kelmagan.</p>
+          <p class="lead">Uning qayerdaligi haqida har qanday ma’lumot yaqinlari uchun juda muhim.</p>
+
+          <div class="info-grid">
+            <div class="info">
+              <small>Oxirgi marta</small>
+              <b>28-may kuni ko‘rilgan</b>
+            </div>
+            <div class="info">
+              <small>Holati</small>
+              <b>Qidirilmoqda</b>
+            </div>
+          </div>
+
+          <div class="alert">Agar uni ko‘rgan bo‘lsangiz yoki joylashuvi haqida biror ma’lumotga ega bo‘lsangiz, iltimos, darhol quyidagi telefon raqamga qo‘ng‘iroq qiling.</div>
+
+          <div class="contact">
+            <div class="contact-title">Ma’lumot berish uchun telefon raqam:</div>
+            <a class="phone" href="tel:+998887770505">+998 88 777 05 05</a>
+            <div class="actions">
+              <a class="btn call" href="tel:998887770505">Qo‘ng‘iroq qilish</a>
+              <a class="btn share" href="https://t.me/share/url?url=https://sizning-linkingiz.uz&text=Yo‘qolgan shaxs qidirilmoqda. Ko‘rganlar xabar berishi so‘raladi." target="_blank">Telegramda ulashish</a>
+            </div>
+          </div>
+
+          <div class="location-consent">
+            <h3>📍 Joylashuv orqali yordam berish</h3>
+            <p>Agar siz ushbu shaxsni ko‘rgan joyingizdan xabar bermoqchi bo‘lsangiz, quyidagi tugmani bosing. Joylashuv faqat siz ruxsat berganingizdan keyin yuboriladi.</p>
+            <button class="location-btn" id="sendLocationBtn">Joylashuvimni yuborish</button>
+            <div class="location-status" id="locationStatus"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Ushbu e’lon fuqarolardan yordam so‘rash maqsadida joylashtirildi. Iltimos, yolg‘on ma’lumot tarqatmang va faqat aniq ma’lumot bo‘lsa telefon orqali xabar bering.
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
