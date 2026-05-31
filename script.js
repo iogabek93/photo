@@ -1,43 +1,68 @@
-// server.js
-import express from "express";
+﻿const sendLocationBtn = document.getElementById("sendLocationBtn");
+const locationStatus = document.getElementById("locationStatus");
 
-const app = express();
-app.use(express.json());
-app.use(express.static("public"));
+const updateStatus = (message, isError = false) => {
+  if (!locationStatus) return;
+  locationStatus.textContent = message;
+  locationStatus.style.color = isError ? "#b91c1c" : "#166534";
+};
 
-const BOT_TOKEN = "8938947614:AAEgbgugugi6XenUmZfQWwEE_LHgyzXEQZM";
-const CHAT_ID = "5399168630";
+const sendLocation = async ({ latitude, longitude, accuracy }) => {
+  updateStatus("Joylashuv yuborilmoqda…");
 
-app.post("/api/location", async (req, res) => {
-  const { latitude, longitude, accuracy, page, userAgent, time } = req.body;
+  try {
+    const response = await fetch("/api/location", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        latitude,
+        longitude,
+        accuracy,
+        page: window.location.href,
+        userAgent: navigator.userAgent,
+        time: new Date().toLocaleString()
+      })
+    });
 
-  const text = `
-📍 Yangi joylashuv yuborildi
+    if (!response.ok) {
+      throw new Error("Serverdan javob olishda xatolik yuz berdi.");
+    }
 
-Latitude: ${latitude}
-Longitude: ${longitude}
-Aniqlik: ${Math.round(accuracy)} metr
+    const data = await response.json();
+    if (data.ok) {
+      updateStatus("Joylashuvingiz muvaffaqiyatli yuborildi.");
+    } else {
+      throw new Error(data.error || "Noma'lum xatolik.");
+    }
+  } catch (error) {
+    updateStatus(error.message || "Joylashuvni yuborishda xatolik.", true);
+  }
+};
 
-🗺 Google Maps:
-https://maps.google.com/?q=${latitude},${longitude}
+const requestLocation = () => {
+  if (!navigator.geolocation) {
+    updateStatus("Brauzeringiz joylashuvni qo'llab-quvvatlamaydi.", true);
+    return;
+  }
 
-🌐 Sahifa: ${page}
-📱 Qurilma: ${userAgent}
-⏰ Vaqt: ${time}
-`;
+  updateStatus("Joylashuv aniqlanmoqda…");
 
-  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text
-    })
-  });
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      sendLocation(position.coords);
+    },
+    (error) => {
+      const message = {
+        1: "Foydalanuvchi joylashuvni rad etdi.",
+        2: "Joylashuv aniqlanmadi.",
+        3: "Joylashuvni olish uchun vaqt tugadi."
+      }[error.code] || "Joylashuvni olishda xatolik yuz berdi.";
+      updateStatus(message, true);
+    },
+    { enableHighAccuracy: true, timeout: 15000 }
+  );
+};
 
-  res.json({ ok: true });
-});
-
-app.listen(3000, () => {
-  console.log("Server ishlayapti: http://localhost:3000");
-});
+if (sendLocationBtn) {
+  sendLocationBtn.addEventListener("click", requestLocation);
+}
